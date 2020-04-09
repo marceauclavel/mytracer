@@ -8,33 +8,35 @@
 - bool init(const char* ifn)
 
 ### Camera
-- Point position
-- Vector direction
+- Point pos
+- Vector dir
 - float xOpening, yOpening
-- float xResolution, yResolution
+- float xRes, yRes
 - Pixel* screen
 - int nPixels
 - int depth
+- bool init()
+- bool print(const char* ofn)
 
 ### Intersection
 - Ray* iray
-- Vector normal
-- Material* material
-- Shape* shape
+- Vector n
+- Material* mat
+- Sphere* sph
 
 ## Data structs
 
 ### Sphere
-- Point position
+- Point pos
 - float r
 
 ### Material
-- Color c
+- Color col
 
 ### Light
-- Point position
-- Vector direction
-- Color c
+- Point pos
+- Vector dir
+- Color col
 
 ### Point
 - float x, y, z
@@ -46,12 +48,12 @@
 - int r, g, b
 
 ### Pixel
-- Color c
-- Ray primaryRay
+- Color col
+- Ray pray
 
 ### Ray
-- Point position
-- Vector direction
+- Point pos
+- Vector dir
 
 ## Functions
 
