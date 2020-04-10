@@ -1,13 +1,21 @@
 #include "Scene.h"
 #include <ostream>
 
-bool Scene::init(const char* ifn) {
-	nMaterials = 1;
-	nSpheres = 1;
-	nLights = 1;
-	Material* materials = Material[nMaterials];
-	Sphere* spheres = Sphere[nSpheres];
-	Light* lights = Light[nLights];
-	std::cout << "scene initialised with file " << ifn << std::endl;
-	return true
+Scene::Scene() {
+	nMaterials = 0;
+	nSpheres = 0;
+	nLights = 0;
+	materials = nullptr;
+	spheres = nullptr;
+	lights = nullptr;
 }
+
+Scene::Scene(int nMaterials, int nSpheres, int nLights, Material* materials, Sphere* spheres, Light* lights){
+	nMaterials = nMaterials;
+	nSpheres = nSpheres;
+	nLights = nLights;
+	materials = materials;
+	spheres = spheres;
+	lights = lights;
+}
+

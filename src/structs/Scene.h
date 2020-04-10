@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Material.h"
 #include "Sphere.h"
 #include "Light.h"
@@ -7,5 +9,6 @@ struct Scene {
 	Material* materials;
 	Sphere* spheres;
 	Light* lights;
-	Scene(nMaterials, nSpheres, nLights, materials, spheres, lights);
-}
+	Scene();
+	Scene(int nMaterials, int nSpheres, int nLights, Material* materials, Sphere* spheres, Light* lights);
+};

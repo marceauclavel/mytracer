@@ -10,12 +10,11 @@
 ### Camera
 - Point pos
 - Vector dir
-- float xOpening, yOpening
-- float xRes, yRes
-- Pixel* screen
-- int nPixels
+- int xOpening, yOpening
+- int xRes, yRes
 - int depth
-- bool init()
+- int nPixels
+- Pixel* screen
 - bool print(const char* ofn)
 
 ### Intersection
@@ -35,7 +34,6 @@
 
 ### Light
 - Point pos
-- Vector dir
 - Color col
 
 ### Point

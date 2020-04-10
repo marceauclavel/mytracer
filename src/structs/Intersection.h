@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Ray.h"
 #include "Vector.h"
 #include "Material.h"
@@ -8,4 +10,4 @@ struct Intersection {
 	Vector n;
 	Material* mat;
 	Sphere* sph;
-}
+};

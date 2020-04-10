@@ -1,25 +1,23 @@
+#include <fstream>
 #include <iostream>
 
-#include "src/structs/Camera.h"
-#include "src/structs/Color.h"
-#include "src/structs/Intersection.h"
-#include "src/structs/Light.h"
-#include "src/structs/Material.h"
-#include "src/structs/Pixel.h"
-#include "src/structs/Point.h"
-#include "src/structs/Ray.h"
-#include "src/structs/Scene.h"
-#include "src/structs/Sphere.h"
-#include "src/structs/Vector.h"
+#include "structs/Camera.h"
+#include "structs/Color.h"
+#include "structs/Intersection.h"
+#include "structs/Light.h"
+#include "structs/Material.h"
+#include "structs/Pixel.h"
+#include "structs/Point.h"
+#include "structs/Ray.h"
+#include "structs/Scene.h"
+#include "structs/Sphere.h"
+#include "structs/Vector.h"
 
-bool init(scene, camera, const char* ifn){
-	//scene variables
-	int nMaterials, nSpheres, nLights;
-	//camera variables
+bool init(Scene scene, Camera camera, char* ifn){
+	//declaring variables
+	int nMaterials, nSpheres, nLights, nPixels, xOpening, yOpening, xRes, yRes, depth;
 	Point pos;
 	Vector dir;
-	int xOpening, yOpening, xRes, yRes;
-	int nPixels;
 
 	std::ifstream file(ifn);
 	if (!file) return false;
