@@ -1,19 +1,9 @@
 #include <fstream>
 #include <iostream>
 
-#include "structs/Camera.h"
-#include "structs/Color.h"
-#include "structs/Intersection.h"
-#include "structs/Light.h"
-#include "structs/Material.h"
-#include "structs/Pixel.h"
-#include "structs/Point.h"
-#include "structs/Ray.h"
-#include "structs/Scene.h"
-#include "structs/Sphere.h"
-#include "structs/Vector.h"
+#include "header.h"
 
-bool init(Scene scene, Camera camera, char* ifn){
+bool init(Scene scene, Camera camera, char* ifn) {
 	//declaring variables
 	int nMaterials, nSpheres, nLights, nPixels, xOpening, yOpening, xRes, yRes, depth;
 	Point pos;
@@ -35,7 +25,7 @@ bool init(Scene scene, Camera camera, char* ifn){
 	Light* lights = new Light[nLights];
 	Pixel* screen = new Pixel[nPixels];
 
-	// filling scene data
+	//filling scene data
 	for (int i = 0; i < nMaterials; i++){
 		file >> materials[i];
 	}
@@ -46,9 +36,14 @@ bool init(Scene scene, Camera camera, char* ifn){
 		file >> lights[i];
 	}
 
+	//filling the objects
 	scene = Scene(nMaterials, nSpheres, nLights, materials, spheres, lights);
 	camera = Camera(pos, dir, xOpening, yOpening, xRes, yRes, depth, nPixels, screen);
 
+	return true;
+}
+
+bool trace(Scene scene, Camera camera, char* ofn) {
 	return true;
 }
 
@@ -62,7 +57,10 @@ int main(int argc, char** argv) {
 	Camera camera;
 	if (init(scene, camera, argv[1])) {
 		std::cout << "initialization successfull !" << std::endl;
-		return -1;
 	}
+	if (trace(scene, camera, argv[2])) {
+		std::cout << "tracing successfull !" << std::endl;
+	}
+	return -1;
 }
 
