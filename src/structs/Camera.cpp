@@ -12,6 +12,7 @@ Camera::Camera() {
 	nPixels = 0;
 	screen = nullptr;
 }
+
 Camera::Camera(Point pos, Vector dir, int xOpening, int yOpening, int xRes, int yRes, int depth, int nPixels, Pixel* screen) {
 	pos = pos;
 	dir = dir;
