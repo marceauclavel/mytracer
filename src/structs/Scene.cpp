@@ -10,12 +10,12 @@ Scene::Scene() {
 	lights = nullptr;
 }
 
-Scene::Scene(int nMaterials, int nSpheres, int nLights, Material* materials, Sphere* spheres, Light* lights){
-	nMaterials = nMaterials;
-	nSpheres = nSpheres;
-	nLights = nLights;
-	materials = materials;
-	spheres = spheres;
-	lights = lights;
+Scene::Scene(int nnMaterials, int nnSpheres, int nnLights, Material* nmaterials, Sphere* nspheres, Light* nlights){
+	nMaterials = nnMaterials;
+	nSpheres = nnSpheres;
+	nLights = nnLights;
+	materials = nmaterials;
+	spheres = nspheres;
+	lights = nlights;
 }
 

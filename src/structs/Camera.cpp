@@ -13,14 +13,14 @@ Camera::Camera() {
 	screen = nullptr;
 }
 
-Camera::Camera(Point pos, Vector dir, int xOpening, int yOpening, int xRes, int yRes, int depth, int nPixels, Pixel* screen) {
-	pos = pos;
-	dir = dir;
-	xOpening = xOpening;
-	yOpening = yOpening;
-	xRes = xRes;
-	yRes = yRes;
-	depth = depth;
-	nPixels = nPixels;
-	screen = screen;
+Camera::Camera(Point npos, Vector ndir, int nxOpening, int nyOpening, int nxRes, int nyRes, int ndepth, int nnPixels, Pixel* nscreen) {
+	pos = npos;
+	dir = ndir;
+	xOpening = nxOpening;
+	yOpening = nyOpening;
+	xRes = nxRes;
+	yRes = nyRes;
+	depth = ndepth;
+	nPixels = nnPixels;
+	screen = nscreen;
 }

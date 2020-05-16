@@ -16,7 +16,7 @@ raytracer.exe: $(OBJ)
 	$(CC) $(OBJ) -o $@
 
 test: raytracer.exe
-	./raytracer.exe test/input.txt test/output.txt
+	./raytracer.exe test/input.txt test/output.ppm
 
 clean:
 	rm *.o *.exe

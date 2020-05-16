@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 #include "header.h"
 
@@ -32,25 +33,35 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 	return true;
 }
 
-bool trace(Scene* scene, Camera* camera, char* ofn) {
+bool trace(Scene* scene, Camera* camera) {
 	float xStep, yStep;
 	Vector dir, xDir, yDir;
 	Point pos;
+	xStep = (2. / camera->xRes) * std::tan(camera->xOpening / 2.);
+	yStep = (2. / camera->yRes) * std::tan(camera->yOpening / 2.);
 	for ( int i = 0; i < camera->xRes; i++) {
 		for ( int j = 0; j < camera->yRes; j++) {
 			pos = camera->pos;
 			dir = camera->dir;
-			//xDir = dir.cross(Vector(0, 0, 1));
-			//yDir = Vector(0, 0, 1);
-			Ray pray;
+			xDir = dir.cross(Vector(0, 0, 1));
+			yDir = Vector(0, 0, 1);
+			dir = dir + ( i * xStep ) * xDir + ( j * yStep ) * yDir;
+			dir.normalize();
+			camera->screen[i + camera->xRes * j].col.r = i ;
 		}
 	}
-	Vector veca = Vector(1., 1., 1.);
-	Vector vecb = Vector(1., 0., 0.);
-	//Vector vecc = veca.cross(vecb);
-	std::cout << "testing veca " << veca.x << " " << veca.y << " " << veca.z << std::endl;
-	std::cout << "testing vecb " << vecb.x << " " << vecb.y << " " << vecb.z << std::endl;
-	//std::cout << "testing vecc " << vecc.x << " " << vecc.y << " " << vecc.z << std::endl;
+	return true;
+}
+
+bool print(Camera* camera, char* ofn) {
+	std::ofstream ofs(ofn, std::ios::out | std::ios::binary);
+	ofs << "P6\n" << camera->xRes << " " << camera->yRes << "\n255\n";
+	for (unsigned i = 0; i < camera->nPixels; ++i) {
+		ofs << (unsigned char)(std::min(255, camera->screen[i].col.r )) <<
+		(unsigned char)(std::min(255, camera->screen[i].col.g )) <<
+		(unsigned char)(std::min(255, camera->screen[i].col.b ));
+	}
+	ofs.close();
 	return true;
 }
 
@@ -66,8 +77,12 @@ int main(int argc, char** argv) {
 		std::cout << "initialization successfull !" << std::endl;
 	}
 	//compute the image
-	if (trace(&scene, &camera, argv[2])) {
+	if (trace(&scene, &camera)) {
 		std::cout << "tracing successfull !" << std::endl;
+	}
+	//print the image
+	if (print(&camera, argv[2])) {
+		std::cout << "printing successfull !" << std::endl;
 	}
 
 	return -1;

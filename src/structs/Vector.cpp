@@ -16,16 +16,22 @@ Vector::Vector(){
 	z = 0.;
 }
 
-Vector::Vector(float x, float y, float z) {
-	std::cout << "initialising a vector to " << x << " " << y << " " << z << " using the constructor Vector(float, float, float)" << std::endl;
-	x = x;
-	y = y;
-	z = z;
+Vector::Vector(float nx, float ny, float nz) {
+	x = nx;
+	y = ny;
+	z = nz;
 }
 Vector Vector::cross(Vector v) {
 	float nx = y * v.z - z * v.y;
 	float ny = z * v.x - x * v.z;
 	float nz = x * v.y - y * v.x;
-	std::cout << "crossing" << x << " " << y << " " << z << std::endl;
 	return Vector(nx, ny, nz);
+}
+
+Vector operator + (const Vector u, const Vector v) {
+	return Vector(u.x + v.x, u.y + v.y, u.z + v.z);
+}
+
+Vector operator * (const float a, const Vector v) {
+	return Vector(a * v.x, a * v.y, a * v.z);
 }
