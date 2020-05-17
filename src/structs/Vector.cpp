@@ -1,4 +1,5 @@
 #include "Vector.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -28,10 +29,18 @@ Vector Vector::cross(Vector v) {
 	return Vector(nx, ny, nz);
 }
 
+float Vector::dot(Vector v) {
+	return x * v.x + y * v.y + z * v.z;
+}
+
 Vector operator + (const Vector u, const Vector v) {
 	return Vector(u.x + v.x, u.y + v.y, u.z + v.z);
 }
 
 Vector operator * (const float a, const Vector v) {
 	return Vector(a * v.x, a * v.y, a * v.z);
+}
+
+Vector operator - (const Point p, const Point q) {
+	return Vector(p.x - q.x, p.y - q.y, p.z - q.z);
 }

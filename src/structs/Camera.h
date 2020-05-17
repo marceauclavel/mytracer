@@ -10,7 +10,7 @@ struct Camera {
 	int xOpening, yOpening;
 	int xRes, yRes;
 	int depth;
-	int nPixels;
+	unsigned int nPixels;
 	Pixel* screen;
 	bool print(const char* ofn);
 	Camera();

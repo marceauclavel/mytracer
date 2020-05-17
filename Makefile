@@ -1,6 +1,6 @@
 CC = g++
-OBJ = raytracer.o Camera.o Scene.o Vector.o
-CFLAGS = -c -Wall
+OBJ = raytracer.o Camera.o Scene.o Vector.o Color.o Sphere.o Material.o
+CFLAGS = -c -Wall -Wextra
 
 all: raytracer.exe
 

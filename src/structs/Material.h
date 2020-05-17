@@ -5,6 +5,8 @@
 
 struct Material {
 	Color col;
+	Material();
+	Material(Color);
 };
 
 inline std::istream& operator >> (std::istream& i, Material& m) {
