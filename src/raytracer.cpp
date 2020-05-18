@@ -39,7 +39,7 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	float d = std::numeric_limits<double>::infinity();
 	float nd;
 	for (int i = 0; i < scene->nSpheres; ++i){
-		//std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
+		std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
 		nd = scene->spheres[i].intersects(ray);
 		if (nd != -1) {
 			//std::cout << nd << std::endl;
