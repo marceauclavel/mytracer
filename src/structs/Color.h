@@ -5,7 +5,7 @@
 struct Color {
 	int r, g, b;
 	Color();
-	Color(int, int, int);
+	Color(const int, const int, const int);
 	Color(Color&);
 };
 

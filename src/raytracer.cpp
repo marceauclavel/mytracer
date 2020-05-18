@@ -35,11 +35,13 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 
 void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	Material background;
+	Color red(255, 0, 0);
+	Material material_red(red);
 	Sphere* closestSphere = nullptr;
 	float d = std::numeric_limits<double>::infinity();
 	float nd;
 	for (int i = 0; i < scene->nSpheres; ++i){
-		std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
+		//std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
 		nd = scene->spheres[i].intersects(ray);
 		if (nd != -1) {
 			//std::cout << nd << std::endl;
@@ -53,9 +55,10 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	if (nd == -1) {
 		intersection->mat = &background;
 	} else {
-		//intersection->mat = &closestSphere->mat;
-		intersection->mat->col.r = 255;
-		std::cout << intersection->mat->col << std::endl;
+		
+		std::cout << closestSphere->mat.col << std::endl;
+		intersection->mat = &material_red;
+		//std::cout << intersection->mat->col << std::endl;
 	}
 }
 

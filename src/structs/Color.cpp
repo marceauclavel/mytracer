@@ -6,7 +6,7 @@ Color::Color() {
 	b = 255;
 }
 
-Color::Color(int nr, int ng, int nb){
+Color::Color(const int nr, const int ng, const int nb){
 	r = nr;
 	g = ng;
 	b = nb;
