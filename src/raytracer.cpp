@@ -47,7 +47,7 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 		//std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
 		nd = scene->spheres[i].intersects(ray);
 		if (nd != -1) {
-			//std::cout << nd << std::endl;
+			std::cout << "sphere hit !" << std::endl;
 			if (nd < d) {
 				d = nd;
 				closestSphere = &scene->spheres[i];
@@ -60,11 +60,23 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	} else {
 		//std::cout << closestSphere->mat.col << std::endl;
 		intersection->mat = &closestSphere->mat;
-		std::cout << intersection->mat->col << std::endl;
 	}
 }
 
 bool trace(Scene* scene, Camera* camera) {
+	camera->setupScreen();
+	Pixel* currentPixel;
+	Intersection intersection;
+	for (unsigned int p = 0; p < camera->nPixels; ++p){
+		currentPixel = &camera->screen[p];
+		std::cout << currentPixel->pray.dir << std::endl;
+		intersect(currentPixel->pray, scene, &intersection);
+		currentPixel->col = intersection.mat->col;
+	}
+	return true;
+}
+
+bool trace2(Scene* scene, Camera* camera) {
 	float xStep, yStep;
 	Vector dir, xDir, yDir;
 	Intersection intersection;

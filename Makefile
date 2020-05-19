@@ -15,8 +15,14 @@ raytracer.o: src/raytracer.cpp
 raytracer.exe: $(OBJ)
 	$(CC) $(OBJ) -o $@
 
+broken.exe: $(OBJ)
+	$(CC) -g $(OBJ) -o $@
+
 test: raytracer.exe
 	./raytracer.exe test/input.txt test/output.ppm
+
+debug: broken.exe
+	gdb broken.exe test/input.txt test/output.ppm
 
 clean:
 	rm *.o *.exe

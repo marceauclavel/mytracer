@@ -13,6 +13,7 @@ struct Camera {
 	unsigned int nPixels;
 	Pixel* screen;
 	bool print(const char* ofn);
+	void setupScreen();
 	Camera();
 	Camera(Point pos, Vector dir, int xOpening, int yOpening, int xRes, int yRes, int depth, int nPixels, Pixel* screen);
 };

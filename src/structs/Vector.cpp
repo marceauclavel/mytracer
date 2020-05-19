@@ -29,6 +29,26 @@ Vector Vector::cross(Vector v) {
 	return Vector(nx, ny, nz);
 }
 
+Vector::Vector(const Vector& v){
+	x = v.x;
+	y = v.y;
+	z = v.z;
+}
+
+Vector::Vector(const Vector* v){
+	x = v->x;
+	y = v->y;
+	z = v->z;
+}
+
+void Vector::rotate(Vector dir, float angle){
+	Vector rotVector = this;
+	rotVector = cos(angle) * rotVector;
+	rotVector = rotVector + sin(angle) * (dir.cross(this));
+	rotVector = rotVector + (dir.dot(this) * (1 - cos(angle)))  * dir;
+	*this = rotVector;
+}
+
 float Vector::dot(Vector v) {
 	return x * v.x + y * v.y + z * v.z;
 }

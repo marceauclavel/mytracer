@@ -8,8 +8,11 @@ struct Vector {
 	void normalize();
 	Vector();
 	Vector(float, float, float);
+	Vector(const Vector&);
+	Vector(const Vector*);
 	Vector cross(Vector);
-	float dot(Vector);
+	float dot(const Vector);
+	void rotate(Vector, float);
 	friend Vector operator + (Vector, Vector);
 	friend Vector operator * (float, Vector);
 	friend Vector operator - (Point, Point);
