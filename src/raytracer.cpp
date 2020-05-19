@@ -30,13 +30,16 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 		file >> scene->lights[i];
 	}
 
+	//linking spheres to materials
+	for (int i = 0; i < scene->nSpheres; i++){
+		scene->spheres[i].mat = scene->materials[0];
+	}
+
 	return true;
 }
 
 void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	Material background;
-	Color red(255, 0, 0);
-	Material material_red(red);
 	Sphere* closestSphere = nullptr;
 	float d = std::numeric_limits<double>::infinity();
 	float nd;
@@ -55,10 +58,9 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	if (nd == -1) {
 		intersection->mat = &background;
 	} else {
-		
-		std::cout << closestSphere->mat.col << std::endl;
-		intersection->mat = &material_red;
-		//std::cout << intersection->mat->col << std::endl;
+		//std::cout << closestSphere->mat.col << std::endl;
+		intersection->mat = &closestSphere->mat;
+		std::cout << intersection->mat->col << std::endl;
 	}
 }
 
@@ -74,7 +76,8 @@ bool trace(Scene* scene, Camera* camera) {
 			dir = camera->dir;
 			xDir = dir.cross(Vector(0, 0, 1));
 			yDir = Vector(0, 0, 1);
-			dir = dir + ( i * xStep ) * xDir + ( j * yStep ) * yDir;
+			dir = dir + ((float)(-1 * camera->xRes / 2) * xStep) * xDir + ((float)(-1 * camera->yRes / 2) * yStep) * yDir;
+			dir = dir + ( i * xStep) * xDir + ( j * yStep ) * yDir;
 			dir.normalize();
 			ray.pos = camera->pos;
 			ray.dir = dir;
