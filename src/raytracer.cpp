@@ -40,26 +40,19 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 
 void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	Material background;
-	Sphere* closestSphere = nullptr;
-	float d = std::numeric_limits<double>::infinity();
-	float nd;
+	//Sphere* closestSphere = nullptr;
+	//float d = std::numeric_limits<double>::infinity();
+	float ns = 0;
 	for (int i = 0; i < scene->nSpheres; ++i){
-		//std::cout << scene->spheres[i].r << " " << scene->spheres[i].pos.x << " " << scene->spheres[i].pos.y << " " << scene->spheres[i].pos.z << std::endl;
-		nd = scene->spheres[i].intersects(ray);
-		if (nd != -1) {
-			std::cout << "sphere hit !" << std::endl;
-			if (nd < d) {
-				d = nd;
-				closestSphere = &scene->spheres[i];
-			}
+		float hit = scene->spheres[i].intersects(ray);
+		if (hit > 0){
+			ns += 1;
 		}
 	}
-	intersection->iray = &ray;
-	if (nd == -1) {
-		intersection->mat = &background;
+	if (ns > 0) {
+		intersection->mat = &scene->spheres[0].mat;
 	} else {
-		//std::cout << closestSphere->mat.col << std::endl;
-		intersection->mat = &closestSphere->mat;
+		intersection->mat = &background;
 	}
 }
 
@@ -69,35 +62,9 @@ bool trace(Scene* scene, Camera* camera) {
 	Intersection intersection;
 	for (unsigned int p = 0; p < camera->nPixels; ++p){
 		currentPixel = &camera->screen[p];
-		std::cout << currentPixel->pray.dir << std::endl;
+		//std::cout << currentPixel->pray.dir << std::endl;
 		intersect(currentPixel->pray, scene, &intersection);
 		currentPixel->col = intersection.mat->col;
-	}
-	return true;
-}
-
-bool trace2(Scene* scene, Camera* camera) {
-	float xStep, yStep;
-	Vector dir, xDir, yDir;
-	Intersection intersection;
-	Ray ray;
-	xStep = (2. / camera->xRes) * std::tan(camera->xOpening / 2.);
-	yStep = (2. / camera->yRes) * std::tan(camera->yOpening / 2.);
-	for ( int i = 0; i < camera->xRes; i++) {
-		for ( int j = 0; j < camera->yRes; j++) {
-			dir = camera->dir;
-			xDir = dir.cross(Vector(0, 0, 1));
-			yDir = Vector(0, 0, 1);
-			dir = dir + ((float)(-1 * camera->xRes / 2) * xStep) * xDir + ((float)(-1 * camera->yRes / 2) * yStep) * yDir;
-			dir = dir + ( i * xStep) * xDir + ( j * yStep ) * yDir;
-			dir.normalize();
-			ray.pos = camera->pos;
-			ray.dir = dir;
-			camera->screen[i + camera->xRes * j].pray = ray;
-			intersect(ray, scene, &intersection);
-			//std::cout << intersection.mat->col.r << std::endl;
-			camera->screen[i + camera->xRes * j].col = intersection.mat->col;
-		}
 	}
 	return true;
 }
@@ -106,9 +73,15 @@ bool print(Camera* camera, char* ofn) {
 	std::ofstream ofs(ofn, std::ios::out | std::ios::binary);
 	ofs << "P6\n" << camera->xRes << " " << camera->yRes << "\n255\n";
 	for (unsigned i = 0; i < camera->nPixels; ++i) {
+		//if (i%2 == 0) {
+		//ofs << (unsigned char)(255) <<
+		//(unsigned char)(255) <<
+		//(unsigned char)(255);
+		//} else {
 		ofs << (unsigned char)(std::min(255, camera->screen[i].col.r )) <<
 		(unsigned char)(std::min(255, camera->screen[i].col.g )) <<
 		(unsigned char)(std::min(255, camera->screen[i].col.b ));
+		//}
 	}
 	ofs.close();
 	return true;

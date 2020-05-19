@@ -6,4 +6,6 @@
 struct Ray {
 	Point pos;
 	Vector dir;
+	Ray();
+	Ray(Point, Vector);
 };

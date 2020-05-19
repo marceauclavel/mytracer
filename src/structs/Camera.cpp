@@ -2,29 +2,28 @@
 #include <math.h>
 #include <ostream>
 
-#define PI 3.14159265
+#define PI M_PI
 
 void Camera::setupScreen() {
-	Ray* ray = NULL;
-	ray->pos = pos;
-	Vector yDir = Vector(0, 0, 1);
+	Ray ray(pos, dir);
+	Vector middleDir = dir;
+	Vector yDir(0, 0, -1);
 	Vector xDir = dir.cross(yDir);
-	float xOpeningRad = xOpening * PI / 180;
-	float yOpeningRad = yOpening * PI / 180;
+	float xOpeningRad = xOpening * PI / 180.;
+	float yOpeningRad = yOpening * PI / 180.;
 	float xAngleStep = xOpeningRad / xRes;
 	float yAngleStep = yOpeningRad / yRes;
-	float xAngle = 1. * (xRes / 2) * xAngleStep;
-	float yAngle = 1. * (yRes / 2) * yAngleStep;
-	ray->dir.rotate(yDir, xAngle);
-	ray->dir.rotate(xDir, yAngle);
-	screen[0].pray.pos = ray->pos;
-	screen[0].pray.dir = ray->dir;
-	for (int i = 0; i < xRes; ++i) {
-		for (int j = 1; j < yRes; ++j) {
-			ray->dir.rotate(yDir, -1 * xAngleStep);
-			ray->dir.rotate(xDir, -1 * yAngleStep);
-			screen[i + xRes * j].pray.pos = ray->pos;
-			screen[i + xRes * j].pray.dir = ray->dir;
+	for (int j = 0; j < yRes; ++j) {
+		for (int i = 0; i < xRes; ++i) {
+			screen[i + xRes * j].pray.pos = ray.pos;
+			screen[i + xRes * j].pray.dir = middleDir;
+			screen[i + xRes * j].pray.dir.rotate(xDir, -1 * (j - yRes / 2) * yAngleStep);
+			screen[i + xRes * j].pray.dir.rotate(yDir, -1 * (i - xRes / 2) * xAngleStep);
+			if (i == 0 || i == xRes-1 ){
+				if (j == 0 || j == yRes - 1) {
+					std::cout << screen[i + xRes * j].pray.dir;
+				}
+			}
 		}
 	}
 }

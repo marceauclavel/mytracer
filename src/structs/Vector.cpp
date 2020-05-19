@@ -4,8 +4,7 @@
 #include <iostream>
 
 void Vector::normalize() {
-	float norm = x * x + y * y + z * z;
-	norm = std::sqrt(norm);
+	float norm = this->norm();
 	x = x / norm;
 	y = y / norm;
 	z = z / norm;
@@ -27,6 +26,10 @@ Vector Vector::cross(Vector v) {
 	float ny = z * v.x - x * v.z;
 	float nz = x * v.y - y * v.x;
 	return Vector(nx, ny, nz);
+}
+
+float Vector::norm() {
+	return std::sqrt(x * x + y * y + z * z);
 }
 
 Vector::Vector(const Vector& v){

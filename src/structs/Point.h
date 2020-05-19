@@ -4,6 +4,8 @@
 
 struct Point {
 	float x, y, z;
+	Point();
+	Point(float, float, float);
 };
 
 inline std::istream& operator >> (std::istream& i, Point& p) {
