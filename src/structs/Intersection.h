@@ -10,4 +10,5 @@ struct Intersection {
 	Vector n;
 	Material* mat;
 	Sphere* sph;
+	float d;
 };

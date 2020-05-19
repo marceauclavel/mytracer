@@ -32,7 +32,7 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 
 	//linking spheres to materials
 	for (int i = 0; i < scene->nSpheres; i++){
-		scene->spheres[i].mat = scene->materials[0];
+		scene->spheres[i].mat = scene->materials[scene->spheres[i].matNb];
 	}
 
 	return true;
@@ -40,31 +40,71 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 
 void intersect(Ray ray, Scene* scene, Intersection* intersection){
 	Material background;
-	//Sphere* closestSphere = nullptr;
-	//float d = std::numeric_limits<double>::infinity();
-	float ns = 0;
+	int closestSphereIndex = -1;
+	float dmin = std::numeric_limits<double>::infinity();
 	for (int i = 0; i < scene->nSpheres; ++i){
-		float hit = scene->spheres[i].intersects(ray);
-		if (hit > 0){
-			ns += 1;
+		float d = scene->spheres[i].intersects(ray);
+		if (d != -1){
+			if (d < dmin){
+				dmin = d;
+				closestSphereIndex = i;
+			}
 		}
 	}
-	if (ns > 0) {
-		intersection->mat = &scene->spheres[0].mat;
-	} else {
+	if (closestSphereIndex == -1) {
 		intersection->mat = &background;
+		intersection->d = -1;
+	} else {
+		intersection->mat = &scene->spheres[closestSphereIndex].mat;
+		intersection->sph = &scene->spheres[closestSphereIndex];
+		intersection->d = dmin;
+		Vector n = Vector(intersection->sph->pos.x, intersection->sph->pos.y, intersection->sph->pos.z) + ( (-1 * dmin) * ray.dir);
+		n.normalize();
+		intersection->n = n;
 	}
+}
+
+int computeShadow(Scene* scene, Intersection* intersection) {
+	Light light = scene->lights[0];
+	Vector lightDir = (intersection->d * intersection->iray->dir) + (-1. *  Vector((float)light.pos.x, (float)light.pos.y, (float)light.pos.z));
+	lightDir.normalize();
+	std::cout << lightDir << std::endl;
+	float intensity = (-1. * intersection->n).dot(lightDir);
+	return intensity;
+}
+
+Color mixColor(Color a, Color b, float coeff) {
+	int nr = coeff * a.r + (1 - coeff) * b.r;
+	int ng = coeff * a.g + (1 - coeff) * b.g;
+	int nb = coeff * a.b + (1 - coeff) * b.b;
+	Color col(nr, ng, nb);
+	return col;
 }
 
 bool trace(Scene* scene, Camera* camera) {
 	camera->setupScreen();
 	Pixel* currentPixel;
 	Intersection intersection;
+	Color diffuse;
+	Color zBuffer;
+	float shadow;
+	Color dark(0);
+	Color col;
 	for (unsigned int p = 0; p < camera->nPixels; ++p){
 		currentPixel = &camera->screen[p];
-		//std::cout << currentPixel->pray.dir << std::endl;
 		intersect(currentPixel->pray, scene, &intersection);
-		currentPixel->col = intersection.mat->col;
+		if (intersection.d  == -1 ) {
+			currentPixel->col = intersection.mat->col;
+		} else {
+			diffuse = mixColor(dark, intersection.mat->col, .5);
+			int ZbufferValue = std::max(0, (int)(255 * (1 - (intersection.d / 10.))));
+			zBuffer = Color(ZbufferValue);
+			col = mixColor(diffuse, zBuffer, .8);
+			shadow = computeShadow(scene, &intersection);
+			std::cout << shadow << std::endl;
+			//col = Color(shadow * col.r, shadow * col.g, shadow * col.b);
+			currentPixel->col = col;
+		}
 	}
 	return true;
 }

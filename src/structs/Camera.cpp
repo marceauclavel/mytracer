@@ -5,10 +5,13 @@
 #define PI M_PI
 
 void Camera::setupScreen() {
+	dir.normalize();
 	Ray ray(pos, dir);
 	Vector middleDir = dir;
-	Vector yDir(0, 0, -1);
-	Vector xDir = dir.cross(yDir);
+	Vector unitZ(0, 0, 1);
+	Vector xDir = dir.cross(unitZ);
+	xDir.normalize();
+	Vector yDir = xDir.cross(dir);
 	float xOpeningRad = xOpening * PI / 180.;
 	float yOpeningRad = yOpening * PI / 180.;
 	float xAngleStep = xOpeningRad / xRes;

@@ -9,9 +9,10 @@ struct Sphere {
 	Point pos;
 	float r;
 	Material mat;
-	int intersects(Ray);
+	int matNb;
+	float intersects(Ray);
 };
 
 inline std::istream& operator >> (std::istream& i, Sphere& s) {
-	return i >> s.pos >> s.r;
+	return i >> s.pos >> s.r >> s.matNb;
 };

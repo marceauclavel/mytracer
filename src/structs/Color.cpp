@@ -12,6 +12,12 @@ Color::Color(const int nr, const int ng, const int nb){
 	b = nb;
 }
 
+Color::Color(int nv) {
+	r = nv;
+	g = nv;
+	b = nv;
+}
+
 Color::Color(Color& c){
 	r = c.r;
 	g = c.g;
