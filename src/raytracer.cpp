@@ -151,6 +151,6 @@ int main(int argc, char** argv) {
 	if (print(&camera, argv[2])) {
 		std::cout << "printing successfull !" << std::endl;
 	}
-	return -1;
+	return 0;
 }
 

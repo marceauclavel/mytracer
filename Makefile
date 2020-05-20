@@ -24,6 +24,12 @@ test: raytracer.exe
 verify: raytracer.exe
 	./raytracer.exe test/input1.txt test/output1.ppm
 	diff test/output1.ppm test/output1-REF.ppm
+	./raytracer.exe test/input2.txt test/output2.ppm
+	diff test/output2.ppm test/output2-REF.ppm
+	./raytracer.exe test/input3.txt test/output3.ppm
+	diff test/output3.ppm test/output3-REF.ppm
+	./raytracer.exe test/input4.txt test/output4.ppm
+	diff test/output4.ppm test/output4-REF.ppm
 
 testseveral: raytracer.exe
 	./raytracer.exe test/input1.txt test/output1.ppm
