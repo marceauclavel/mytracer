@@ -22,17 +22,12 @@ void Camera::setupScreen() {
 			screen[i + xRes * j].pray.dir = middleDir;
 			screen[i + xRes * j].pray.dir.rotate(xDir, -1 * (j - yRes / 2) * yAngleStep);
 			screen[i + xRes * j].pray.dir.rotate(yDir, -1 * (i - xRes / 2) * xAngleStep);
-			if (i == 0 || i == xRes-1 ){
-				if (j == 0 || j == yRes - 1) {
-					std::cout << screen[i + xRes * j].pray.dir;
-				}
-			}
 		}
 	}
 }
 
 Camera::Camera() {
-	pos = Point();
+	pos = Vector();
 	dir = Vector();
 	xOpening = 0;
 	yOpening = 0;
@@ -43,7 +38,7 @@ Camera::Camera() {
 	screen = nullptr;
 }
 
-Camera::Camera(Point npos, Vector ndir, int nxOpening, int nyOpening, int nxRes, int nyRes, int ndepth, int nnPixels, Pixel* nscreen) {
+Camera::Camera(Vector npos, Vector ndir, int nxOpening, int nyOpening, int nxRes, int nyRes, int ndepth, int nnPixels, Pixel* nscreen) {
 	pos = npos;
 	dir = ndir;
 	xOpening = nxOpening;

@@ -2,11 +2,11 @@
 
 #include <istream>
 
-#include "Point.h"
+#include "Vector.h"
 #include "Color.h"
 
 struct Light {
-	Point pos;
+	Vector pos;
 	Color col;
 };
 

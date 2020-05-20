@@ -11,4 +11,5 @@ struct Intersection {
 	Material* mat;
 	Sphere* sph;
 	float d;
+	Vector pos;
 };

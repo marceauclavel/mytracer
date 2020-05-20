@@ -4,7 +4,6 @@
 #include "structs/Light.h"
 #include "structs/Material.h"
 #include "structs/Pixel.h"
-#include "structs/Point.h"
 #include "structs/Ray.h"
 #include "structs/Scene.h"
 #include "structs/Sphere.h"

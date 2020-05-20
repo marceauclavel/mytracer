@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Point.h"
+#include "Vector.h"
 #include "Vector.h"
 
 struct Ray {
-	Point pos;
+	Vector pos;
 	Vector dir;
 	Ray();
-	Ray(Point, Vector);
+	Ray(Vector, Vector);
 };

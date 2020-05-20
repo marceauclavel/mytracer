@@ -1,12 +1,12 @@
 #pragma once
 
 #include <istream>
-#include "Point.h"
+#include "Vector.h"
 #include "Material.h"
 #include "Ray.h"
 
 struct Sphere {
-	Point pos;
+	Vector pos;
 	float r;
 	Material mat;
 	int matNb;

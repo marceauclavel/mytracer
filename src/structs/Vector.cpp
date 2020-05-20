@@ -64,6 +64,6 @@ Vector operator * (const float a, const Vector v) {
 	return Vector(a * v.x, a * v.y, a * v.z);
 }
 
-Vector operator - (const Point p, const Point q) {
+Vector operator - (const Vector p, const Vector q) {
 	return Vector(p.x - q.x, p.y - q.y, p.z - q.z);
 }

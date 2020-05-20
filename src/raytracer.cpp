@@ -22,6 +22,7 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 	//filling scene data
 	for (int i = 0; i < scene->nMaterials; i++){
 		file >> scene->materials[i];
+		//std::cout << scene->materials[i].col << std::endl;
 	}
 	for (int i = 0; i < scene->nSpheres; i++){
 		file >> scene->spheres[i];
@@ -33,18 +34,18 @@ bool init(Scene* scene, Camera* camera, char* ifn) {
 	//linking spheres to materials
 	for (int i = 0; i < scene->nSpheres; i++){
 		scene->spheres[i].mat = scene->materials[scene->spheres[i].matNb];
+		//std::cout << scene->spheres[i].mat.col << std::endl;
 	}
 
 	return true;
 }
 
 void intersect(Ray ray, Scene* scene, Intersection* intersection){
-	Material background;
 	int closestSphereIndex = -1;
 	float dmin = std::numeric_limits<double>::infinity();
 	for (int i = 0; i < scene->nSpheres; ++i){
 		float d = scene->spheres[i].intersects(ray);
-		if (d != -1){
+		if (d > 0){
 			if (d < dmin){
 				dmin = d;
 				closestSphereIndex = i;
@@ -52,58 +53,62 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 		}
 	}
 	if (closestSphereIndex == -1) {
-		intersection->mat = &background;
 		intersection->d = -1;
 	} else {
-		intersection->mat = &scene->spheres[closestSphereIndex].mat;
-		intersection->sph = &scene->spheres[closestSphereIndex];
 		intersection->d = dmin;
-		Vector n = Vector(intersection->sph->pos.x, intersection->sph->pos.y, intersection->sph->pos.z) + ( (-1 * dmin) * ray.dir);
+		intersection->sph = &scene->spheres[closestSphereIndex];
+		intersection->mat = &intersection->sph->mat;
+		Vector n = intersection->sph->pos - (dmin * ray.dir) + ray.pos;
 		n.normalize();
 		intersection->n = n;
+		intersection->pos = intersection->sph->pos + intersection->sph->r * n;
 	}
 }
 
-int computeShadow(Scene* scene, Intersection* intersection) {
+Color computeShadow(Scene* scene, Intersection* intersection) {
 	Light light = scene->lights[0];
-	Vector lightDir = (intersection->d * intersection->iray->dir) + (-1. *  Vector((float)light.pos.x, (float)light.pos.y, (float)light.pos.z));
+	Vector lightDir = intersection->pos - light.pos;
 	lightDir.normalize();
-	std::cout << lightDir << std::endl;
-	float intensity = (-1. * intersection->n).dot(lightDir);
-	return intensity;
+	float lightFacingRatio = std::max(0.0f, (intersection->n).dot(lightDir));
+	Color shadow(255* lightFacingRatio);
+	return shadow;
 }
 
-Color mixColor(Color a, Color b, float coeff) {
-	int nr = coeff * a.r + (1 - coeff) * b.r;
-	int ng = coeff * a.g + (1 - coeff) * b.g;
-	int nb = coeff * a.b + (1 - coeff) * b.b;
+void mix(Color cola, Color colb, float coeff, Color* ncol) {
+	ncol->r = coeff * cola.r + (1 - coeff) * (float)colb.r;
+	ncol->g = coeff * cola.g + (1 - coeff) * (float)colb.g;
+	ncol->b = coeff * cola.b + (1 - coeff) * (float)colb.b;
+}
+
+Color sub(Color cola, Color colb) {
+	int nr = std::max(0, colb.r - cola.r);
+	int ng = std::max(0, colb.r - cola.r);
+	int nb = std::max(0, colb.b - cola.b);
 	Color col(nr, ng, nb);
 	return col;
 }
 
 bool trace(Scene* scene, Camera* camera) {
+	Color white(255);
 	camera->setupScreen();
 	Pixel* currentPixel;
 	Intersection intersection;
 	Color diffuse;
-	Color zBuffer;
-	float shadow;
-	Color dark(0);
-	Color col;
+	Color shadow;
 	for (unsigned int p = 0; p < camera->nPixels; ++p){
 		currentPixel = &camera->screen[p];
 		intersect(currentPixel->pray, scene, &intersection);
 		if (intersection.d  == -1 ) {
-			currentPixel->col = intersection.mat->col;
+			currentPixel->col = white;
 		} else {
-			diffuse = mixColor(dark, intersection.mat->col, .5);
-			int ZbufferValue = std::max(0, (int)(255 * (1 - (intersection.d / 10.))));
-			zBuffer = Color(ZbufferValue);
-			col = mixColor(diffuse, zBuffer, .8);
+			diffuse = intersection.mat->col;
 			shadow = computeShadow(scene, &intersection);
-			std::cout << shadow << std::endl;
-			//col = Color(shadow * col.r, shadow * col.g, shadow * col.b);
-			currentPixel->col = col;
+			Color finalCol;
+			mix(shadow, diffuse, 0, &finalCol);
+			currentPixel->col = diffuse;
+			//currentPixel->col = shadow;
+			//currentPixel->col = diffuse;
+			//std::cout << currentPixel->col << std::endl;
 		}
 	}
 	return true;
@@ -113,15 +118,9 @@ bool print(Camera* camera, char* ofn) {
 	std::ofstream ofs(ofn, std::ios::out | std::ios::binary);
 	ofs << "P6\n" << camera->xRes << " " << camera->yRes << "\n255\n";
 	for (unsigned i = 0; i < camera->nPixels; ++i) {
-		//if (i%2 == 0) {
-		//ofs << (unsigned char)(255) <<
-		//(unsigned char)(255) <<
-		//(unsigned char)(255);
-		//} else {
-		ofs << (unsigned char)(std::min(255, camera->screen[i].col.r )) <<
-		(unsigned char)(std::min(255, camera->screen[i].col.g )) <<
-		(unsigned char)(std::min(255, camera->screen[i].col.b ));
-		//}
+		ofs << (unsigned char)(std::min(255.f, (float)camera->screen[i].col.r )) <<
+		(unsigned char)(std::min(255.f, (float)camera->screen[i].col.g )) <<
+		(unsigned char)(std::min(255.f, (float)camera->screen[i].col.b ));
 	}
 	ofs.close();
 	return true;

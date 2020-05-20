@@ -1,7 +1,7 @@
 #pragma once
 
 #include <istream>
-#include "Point.h"
+#include "Vector.h"
 
 struct Vector {
 	float x, y, z;
@@ -16,7 +16,7 @@ struct Vector {
 	void rotate(Vector, float);
 	friend Vector operator + (Vector, Vector);
 	friend Vector operator * (float, Vector);
-	friend Vector operator - (Point, Point);
+	friend Vector operator - (Vector, Vector);
 };
 
 inline std::istream& operator >> (std::istream& i, Vector& v) {
