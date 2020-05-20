@@ -19,10 +19,19 @@ broken.exe: $(OBJ)
 	$(CC) -g $(OBJ) -o $@
 
 test: raytracer.exe
-	./raytracer.exe test/input.txt test/output.ppm
+	./raytracer.exe test/input1.txt test/output1.ppm
 
-debug: broken.exe
-	gdb broken.exe test/input.txt test/output.ppm
+verify: raytracer.exe
+	./raytracer.exe test/input1.txt test/output1.ppm
+	diff test/output1.ppm test/output1-REF.ppm
+
+testseveral: raytracer.exe
+	./raytracer.exe test/input1.txt test/output1.ppm
+	./raytracer.exe test/input2.txt test/output2.ppm
+	./raytracer.exe test/input3.txt test/output3.ppm
+
+#debug: broken.exe
+#	gdb broken.exe test/input.txt test/output.ppm
 
 clean:
 	rm *.o *.exe

@@ -57,7 +57,7 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 		intersection->d = dmin;
 		intersection->sph = &scene->spheres[closestSphereIndex];
 		intersection->mat = &intersection->sph->mat;
-		Vector n = intersection->sph->pos - (dmin * ray.dir) + ray.pos;
+		Vector n = intersection->sph->pos - (dmin * ray.dir + ray.pos);
 		n.normalize();
 		intersection->n = n;
 		intersection->iray = &ray;
@@ -67,34 +67,37 @@ void intersect(Ray ray, Scene* scene, Intersection* intersection){
 
 float computeLightExposure(Scene* scene, Intersection* intersection) {
 	Light light = scene->lights[0];
+	//std::cout << intersection->pos << light.pos << std::endl;
+	//std::cout << lightDir << std::endl;
 	Vector lightDir = intersection->pos - light.pos;
 	lightDir.normalize();
 	//std::cout << intersection->n.norm() << std::endl;
-	float lightFacingRatio = std::max(0.0f, -1 * (intersection->n).dot(lightDir));
+	//std::cout << lightDir.norm() << std::endl;
+	float lightFacingRatio = std::max(0.0f, (intersection->n).dot(lightDir));
 	return lightFacingRatio;
 }
 
-float computePreExpSpec(Scene* scene, Intersection* intersection) {
-	Light light = scene->lights[0];
-	Vector lightDir = intersection->pos - light.pos;
-	lightDir.normalize();
-	Vector n = intersection->n;
-	Vector perfRefl = lightDir + 2 * n.dot(lightDir) * n;
-	perfRefl.normalize();
-	//std::cout << intersection->iray->dir.norm() << perfRefl.norm() << std::endl;
-	//std::cout << std::max(0.f, intersection->iray->dir.dot(perfRefl)) << std::endl;
-	return std::max(0.0f, intersection->iray->dir.dot(perfRefl));
-}
+//float computePreExpSpec(Scene* scene, Intersection* intersection) {
+//	Light light = scene->lights[0];
+//	Vector lightDir = intersection->pos - light.pos;
+//	lightDir.normalize();
+//	Vector n = intersection->n;
+//	Vector perfRefl = lightDir + 2 * n.dot(lightDir) * n;
+//	perfRefl.normalize();
+//	//std::cout << intersection->iray->dir.norm() << perfRefl.norm() << std::endl;
+//	//std::cout << std::max(0.f, intersection->iray->dir.dot(perfRefl)) << std::endl;
+//	return std::max(0.0f, intersection->iray->dir.dot(perfRefl));
+//}
 
 bool trace(Scene* scene, Camera* camera) {
 	//Phong model constants
-	float ka(.1), kd(.7), ks(0.2);
+	float ka(.3), kd(.7);
 	Color white(255);
 	camera->setupScreen();
 	Pixel* currentPixel;
 	Intersection intersection;
-	Color ambient, diffuse, specular, finalCol;
-	float lightExposure, shininess, preExpSpec;
+	Color ambient, diffuse, finalCol;
+	float lightExposure;
 	for (unsigned int p = 0; p < camera->nPixels; ++p){
 		currentPixel = &camera->screen[p];
 		intersect(currentPixel->pray, scene, &intersection);
@@ -103,20 +106,12 @@ bool trace(Scene* scene, Camera* camera) {
 		} else {
 			ambient = intersection.mat->ambient;
 			diffuse = intersection.mat->diffuse;
-			specular = intersection.mat->specular;
-			shininess = intersection.mat->shininess;
 
 			lightExposure = computeLightExposure(scene, &intersection);
-			preExpSpec = computePreExpSpec(scene, &intersection);
-
-			ambient = ka * ambient;
-			std::cout << diffuse << std::endl;
-			std::cout << lightExposure << std::endl;
-			diffuse = 2 * lightExposure * diffuse;
-			specular = ks * pow(preExpSpec, shininess) * specular;
-			//specular = ks * preExpSpec * specular;
+			//std::cout << lightExposure << std::endl;
+			//ambient = ka * ambient;
+			diffuse = lightExposure * diffuse;
 			//finalCol = ambient + diffuse;
-			//finalCol = finalCol + specular;
 			//currentPixel->col = diffuse;
 			finalCol = diffuse;
 		}
