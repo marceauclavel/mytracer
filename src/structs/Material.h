@@ -4,11 +4,14 @@
 #include "Color.h"
 
 struct Material {
-	Color col;
+	Color ambient;
+	Color diffuse;
+	Color specular;
+	float shininess;
 	Material();
-	Material(Color);
+	Material(Color, Color, Color, float);
 };
 
 inline std::istream& operator >> (std::istream& i, Material& m) {
-	return i >> m.col;
+	return i >> m.ambient >> m.diffuse >> m.specular >> m.shininess;
 }

@@ -21,5 +21,21 @@ Color::Color(int nv) {
 Color::Color(Color& c){
 	r = c.r;
 	g = c.g;
-	b = c.g;
+	b = c.b;
+}
+
+Color operator * (float ratio, Color col){
+	Color nCol;
+	nCol.r = ratio * col.r;
+	nCol.g = ratio * col.g;
+	nCol.b = ratio * col.b;
+	return nCol;
+}
+
+Color operator + (Color cola, Color colb) {
+	Color nCol;
+	nCol.r = cola.r + colb.r;
+	nCol.g = cola.g + colb.g;
+	nCol.b = cola.b + colb.b;
+	return nCol;
 }

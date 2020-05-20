@@ -8,6 +8,8 @@ struct Color {
 	Color(const int, const int, const int);
 	Color(const int);
 	Color(Color&);
+	friend Color operator * (float, Color);
+	friend Color operator + (Color, Color);
 };
 
 inline std::istream& operator >> (std::istream& i, Color& c) {
